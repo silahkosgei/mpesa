@@ -1,0 +1,28 @@
+{
+    "name": "silahkosgei/mpesa",
+    "description": "Laravel M-PESA Integration Package",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Silah Kosgei",
+            "email": "silakosy@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Silahkosgei\\Mpesa\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^9.0|^10.0|^11.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Silahkosgei\\Mpesa\\MpesaServiceProvider"
+            ]
+        }
+    }
+}
