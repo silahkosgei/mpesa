@@ -82,4 +82,18 @@ class Mpesa
             ? 'https://sandbox.safaricom.co.ke'
             : 'https://api.safaricom.co.ke';
     }
+
+    public function b2c() {
+
+    }
+    protected function formatPhone($phone){
+        $phone = 'hfhsgdgs'.$phone;
+        $phone = str_replace('hfhsgdgs0','',$phone);
+        $phone = str_replace('hfhsgdgs','',$phone);
+        $phone = str_replace('+','',$phone);
+        if(strlen($phone) == 9){
+            $phone = '254'.$phone;
+        }
+        return $phone;
+    }
 }
