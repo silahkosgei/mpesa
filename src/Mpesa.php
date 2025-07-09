@@ -17,6 +17,8 @@ class Mpesa
 
     public function initiateStkPush($phone, $amount, $reference, $description, $referenceId)
     {
+        $phone = $this->formatPhone($phone);
+
         $type = $this->config['shortcode_type'] === 'BuyGoods'
             ? 'CustomerBuyGoodsOnline'
             : 'CustomerPayBillOnline';
@@ -58,15 +60,34 @@ class Mpesa
         return CurlHelper::post($url, $payload, $this->accessToken());
     }
 
-    protected function generatePassword()
+    public function b2c($amount, $phone, $callbackUrl, $withdrawalId)
     {
-        return base64_encode($this->config['shortcode'] . $this->config['passkey'] . $this->timestamp);
+        $formattedPhone = $this->formatPhone($phone);
+
+        $url = $this->baseUrl() . '/mpesa/b2c/v1/paymentrequest';
+        $token = $this->accessToken();
+
+        $securityCredential = $this->generateSecurityCredential();
+
+        $payload = [
+            'InitiatorName' => $this->config['b2c_username'],
+            'SecurityCredential' => $securityCredential,
+            'CommandID' => 'BusinessPayment',
+            'Amount' => $amount,
+            'PartyA' => $this->config['shortcode'],
+            'PartyB' => $formattedPhone,
+            'Remarks' => 'B2C Payment',
+            'QueueTimeOutURL' => url($callbackUrl . '/' . $withdrawalId),
+            'ResultURL' => url($callbackUrl . '/' . $withdrawalId),
+            'Occasion' => 'B2C Transfer',
+        ];
+
+        return CurlHelper::post($url, $payload, $token);
     }
 
     protected function accessToken()
     {
         $credentials = base64_encode($this->config['consumer_key'] . ':' . $this->config['consumer_secret']);
-
         $url = $this->baseUrl() . '/oauth/v1/generate?grant_type=client_credentials';
 
         $response = CurlHelper::get($url, [
@@ -76,6 +97,21 @@ class Mpesa
         return $response->access_token ?? '';
     }
 
+    protected function generatePassword()
+    {
+        return base64_encode(
+            $this->config['shortcode'] . $this->config['passkey'] . $this->timestamp
+        );
+    }
+
+    protected function generateSecurityCredential()
+    {
+        $cert = $this->returnCertificate();
+        $pk = openssl_pkey_get_public($cert);
+        openssl_public_encrypt($this->config['b2c_password'], $encrypted, $pk, OPENSSL_PKCS1_PADDING);
+        return base64_encode($encrypted);
+    }
+
     protected function baseUrl()
     {
         return $this->config['env'] === 'sandbox'
@@ -83,17 +119,27 @@ class Mpesa
             : 'https://api.safaricom.co.ke';
     }
 
-    public function b2c() {
+    protected function formatPhone($phone)
+    {
+        $phone = 'hfhsgdgs' . $phone;
+        $phone = str_replace('hfhsgdgs0', '', $phone);
+        $phone = str_replace('hfhsgdgs', '', $phone);
+        $phone = str_replace('+', '', $phone);
 
-    }
-    protected function formatPhone($phone){
-        $phone = 'hfhsgdgs'.$phone;
-        $phone = str_replace('hfhsgdgs0','',$phone);
-        $phone = str_replace('hfhsgdgs','',$phone);
-        $phone = str_replace('+','',$phone);
-        if(strlen($phone) == 9){
-            $phone = '254'.$phone;
+        if (strlen($phone) == 9) {
+            $phone = '254' . $phone;
         }
+
         return $phone;
+    }
+
+    protected function returnCertificate()
+    {
+        return <<<EOT
+        -----BEGIN CERTIFICATE-----
+        MIIGkzCCBXugAwIBAgIKXfBp5gAAAD+hNjANBgkqhkiG9w0BAQsFADBbMRMwEQYK
+        ...your full Safaricom B2C cert here...
+        -----END CERTIFICATE-----
+        EOT;
     }
 }
