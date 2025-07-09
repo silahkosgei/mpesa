@@ -24,5 +24,7 @@
                 "Silahkosgei\\Mpesa\\MpesaServiceProvider"
             ]
         }
-    }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
