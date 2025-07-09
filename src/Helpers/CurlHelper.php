@@ -1,6 +1,6 @@
 <?php
 
-namespace silahkosgei\Mpesa\Helpers;
+namespace SilahKosgei\Mpesa\Helpers;
 
 class CurlHelper
 {
