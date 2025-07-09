@@ -14,6 +14,22 @@ class Mpesa
         $this->config = config('mpesa');
         $this->timestamp = now()->format('YmdHis');
     }
+    public function registerUrls()
+    {
+        $token = $this->accessToken();
+
+        $url = $this->getBaseUrl() . '/mpesa/c2b/v1/registerurl';
+
+        $payload = [
+            'ShortCode' => config('mpesa.shortcode'),
+            'ResponseType' => 'Completed', // or 'Cancelled'
+            'ConfirmationURL' => config('mpesa.confirmation_url'),
+            'ValidationURL' => config('mpesa.validation_url'),
+        ];
+
+        return CurlHelper::post($url, $payload, $token);
+    }
+
 
     public function initiateStkPush($phone, $amount, $reference, $description, $referenceId)
     {

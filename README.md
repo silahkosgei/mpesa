@@ -31,6 +31,7 @@ MPESA_PASSKEY=YOUR_PASSKEY_HERE
 MPESA_CONSUMER_KEY=YOUR_CONSUMER_KEY
 MPESA_CONSUMER_SECRET=YOUR_CONSUMER_SECRET
 MPESA_CALLBACK_URL=https://yourapp.com/api/complete-payment
+MPESA_CONFIRMATION_URL=https://yourapp.com/api/confirmation-payment
 ```
 
 ---
