@@ -7,7 +7,7 @@ A Laravel package for integrating with Safaricom's M-PESA STK Push and B2C APIs.
 ##  Installation
 
 ```bash
-composer require silahkosgei/mpesa:^1.1
+composer require SilahKosgei/mpesa:^1.1
 ```
 
 Then publish the configuration file:

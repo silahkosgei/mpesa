@@ -1,7 +1,7 @@
 {
     "name": "silahkosgei/mpesa",
     "description": "Laravel M-PESA Integration Package",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -22,7 +22,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Silahkosgei\\Mpesa\\MpesaServiceProvider"
+                "SilahKosgei\\Mpesa\\MpesaServiceProvider"
             ]
         }
     },
